@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Full Name</th>
+        <th>Image</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users%}
+    <tr>
+        <th>
+            {{user.email}}
+        </th>
+        <th>
+            {{user.full_name}}
+        </th>
+        <th>
+            <img src='{% static user.image %}'>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

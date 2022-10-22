@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>Сотрудник</th>
+        <th>Стаж в годах</th>
+        <th>Зараплата</th>
+        <th>Статус резюме</th>
+        <th>Аватар</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for resume in resumers%}
+    <tr>
+        <th>
+            {{resume.user.email}}
+        </th>
+        <th>
+            {{resume.exp_work}}
+        </th>
+        <th>
+            {{resume.salary}}
+        </th>
+        <th>
+            {{resume.status}}
+        </th>
+        <th>
+            <img src='{% static resume.image %}'>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
