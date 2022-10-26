@@ -1,6 +1,8 @@
+import datetime
+
 from django.db import models
 from django.conf import settings
-from accounts.models import Department
+from accounts.models import Department, User
 
 TO_WORK = 'T_W'
 NOT_PUBLISHED = 'N_P'
@@ -37,12 +39,16 @@ class Vacancy(models.Model):
     description = models.TextField(max_length=500, verbose_name='Описание вакансии', blank=True, null=True)
     exp_work = models.PositiveSmallIntegerField(verbose_name='Требуемый стаж работы', default=0)
     salary = models.PositiveIntegerField(verbose_name='Заработная плата', default=0)
-    department = models.CharField(max_length=150, blank=True, null=True, verbose_name='Департамент')
+    department = models.ForeignKey(Department, blank=True, null=True, verbose_name='Департамент', on_delete=models.RESTRICT)
     status = models.CharField(max_length=3, choices=statuses, default=TO_WORK, verbose_name='Статус резюме:')
     data_updated = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования/публикации')
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.department = User.objects.get(id=self.user.id).department
+        super(Vacancy, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Вакансия'

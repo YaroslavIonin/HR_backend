@@ -21,7 +21,7 @@ class VacancyAdmin(admin.ModelAdmin):
     list_display = ['title', 'user', 'department', 'exp_work', 'salary', 'status']
     fields = (('title', 'status'), ('user', 'department'), ('exp_work', 'salary'), 'description')
     empty_value_display = '-empty-'
-    # readonly_fields = ('user', 'exp_work', 'salary', 'status', 'data_updated' )
+    readonly_fields = ('department',)
     list_filter = ('title', 'user', 'department', 'exp_work', 'salary', 'status')
     list_max_show_all = 20
     list_per_page = 10

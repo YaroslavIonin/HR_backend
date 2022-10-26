@@ -1,6 +1,18 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Department
+from back.models import Resume
+
+
+class DepartmentInstanceInline(admin.StackedInline):
+    model = User
+    fields = ('full_name', 'email')
+    extra = 0
+
+
+class ResumeInstanceInline(admin.StackedInline):
+    model = Resume
+    extra = 0
 
 
 @admin.register(User)
@@ -14,6 +26,7 @@ class UserAdmin(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ['email', 'full_name']
     search_help_text = 'Поиск осуществляется по email и full_name пользователей'
+    inlines = [ResumeInstanceInline]
 
 
 @admin.register(Department)
@@ -26,5 +39,7 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ['name']
     search_help_text = 'Поиск осуществляется по названию департамента'
+    inlines = [DepartmentInstanceInline]
+
 
 
