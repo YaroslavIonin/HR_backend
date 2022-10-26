@@ -1,8 +1,18 @@
-from django.shortcuts import render
-from .models import Resume
+from rest_framework.response import Response
+from .models import Resume, Vacancy
+from .serializers import ResumeSerializer, VacancySerializer
+from rest_framework.viewsets import ModelViewSet
 
 
-# Create your views here.
-def proverca(request):
-    resumes = Resume.objects.all()
-    return render(request, 'resumes.html', {'resumes': resumes})
+class VacancyViewSet(ModelViewSet):
+    queryset = Vacancy.objects.all()
+    serializer_class = VacancySerializer
+
+    def create(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not instance.user.is_header_dep:
+            return Response({'err': 'Создавать вакансии может только глава департамента'})
+        return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, department=self.request.user.department)
