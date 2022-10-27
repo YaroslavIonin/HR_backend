@@ -16,3 +16,16 @@ class VacancyViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, department=self.request.user.department)
+
+
+class ResumeViewSet(ModelViewSet):
+    queryset = Resume.objects.all()
+    serializer_class = ResumeSerializer
+
+    def create(self, request, *args, **kwargs):
+        if len(Resume.objects.filter(user=self.request.user.id)) != 0:
+            return Response({'err': 'У сотрудника может быть только одно резюме.'})
+        return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

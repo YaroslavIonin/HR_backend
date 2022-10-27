@@ -3,7 +3,10 @@ from .models import Resume, Vacancy
 
 
 class ResumeSerializer(serializers.ModelSerializer):
-    # user = serializers.SerializerMethodField(read_only=True)
+    user = serializers.SerializerMethodField(read_only=True)
+
+    def get_user(self, obj):
+        return str(obj.user.id)
 
     class Meta:
         model = Resume

@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from .models import User
+from .models import User, Department
+from .serializers import UserSerializer, DepartmentSerializer
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 
-# Create your views here.
-def proverca(request):
-    users = User.objects.all()
-    return render(request, 'users.html', {'users': users})
+class DepartmentViewSet(ReadOnlyModelViewSet):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentSerializer
