@@ -22,7 +22,7 @@ class UserAdmin(admin.ModelAdmin):
     empty_value_display = '-empty-'
     list_filter = ('full_name', 'email', 'is_admin', 'is_header_dep')
     list_max_show_all = 20
-    readonly_fields = ('password',)
+    # readonly_fields = ('password',)
     list_per_page = 10
     search_fields = ['email', 'full_name']
     search_help_text = 'Поиск осуществляется по email и full_name пользователей'

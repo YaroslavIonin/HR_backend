@@ -1,6 +1,7 @@
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, identify_hasher
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+# from back.models import Resume
 
 
 class UserManager(BaseUserManager):
@@ -70,7 +71,9 @@ class User(AbstractBaseUser):
 
     def save(self, *args, **kwargs):
         self.is_staff = self.is_admin
-        if not self.id and not self.is_admin and not self.is_staff:
+        try:
+           _alg_ = identify_hasher(self.password)
+        except ValueError:
             self.password = make_password(self.password)
         if self.is_admin:
             self.is_header_dep = True
