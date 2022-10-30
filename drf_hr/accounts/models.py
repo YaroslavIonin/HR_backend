@@ -70,7 +70,11 @@ class User(AbstractBaseUser):
         return True
 
     def save(self, *args, **kwargs):
-        self.is_staff = self.is_admin
+        try:
+            self.is_staff = self.is_admin
+        except AttributeError:
+            self.is_staff = False
+            self.is_admin = False
         try:
            _alg_ = identify_hasher(self.password)
         except ValueError:

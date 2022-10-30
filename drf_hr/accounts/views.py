@@ -16,4 +16,4 @@ class UserViewSet(ModelViewSet):
     model = get_user_model()
     queryset = model.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminUser,)
+    # permission_classes = (IsAuthenticated,)
