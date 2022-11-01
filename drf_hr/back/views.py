@@ -3,7 +3,7 @@ from .models import Resume, Vacancy
 from .serializers import ResumeSerializer, VacancySerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsAuthorOrReadOnly
+from .permissions import IsAuthorOrReadOnly, IsHeaderOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 
@@ -16,7 +16,7 @@ class IsOwnerFilter(filters.BaseFilterBackend):
 class VacancyViewSet(ModelViewSet):
     queryset = Vacancy.objects.all()
     serializer_class = VacancySerializer
-    permission_classes = (IsAuthorOrReadOnly,)
+    permission_classes = (IsAuthorOrReadOnly, IsHeaderOrReadOnly)
     filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
     filterset_fields = ('exp_work', 'salary', 'department')
     ordering_fields = ['data_updated']
