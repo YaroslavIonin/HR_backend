@@ -1,8 +1,15 @@
 from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.contrib.auth import get_user_model
-from .models import User, Department
-from .serializers import UserSerializer, DepartmentSerializer
+from rest_framework.response import Response
+from django.core.mail import send_mail, send_mass_mail
+from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.exceptions import AuthenticationFailed
+
+from .models import User, Department, Bid
+from .serializers import UserSerializer, DepartmentSerializer, RegisterSerializer, RequestSerializer
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 
@@ -12,8 +19,90 @@ class DepartmentViewSet(ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated,)
 
 
-class UserViewSet(ModelViewSet):
-    model = get_user_model()
-    queryset = model.objects.all()
+class RegisterView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = RegisterSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "message": "Пользователь успешно создан",
+        })
+
+
+class LoginView(APIView):
+    def post(self, request):
+        email = request.data['email']
+        password = request.data['password']
+        user = User.objects.filter(email=email).first()
+        if user is None:
+            raise AuthenticationFailed('Такого пользователя не существует')
+        if not user.check_password(password):
+            raise AuthenticationFailed('Неверный пароль')
+
+        return Response({
+            "message": "Вход выполнен"
+        })
+
+
+class ProfileView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
-    # permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        return Response({
+            "user": UserSerializer(request.user, context=self.get_serializer_context()).data,
+        })
+
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        user.full_name = request.data["full_name"]
+        ###############################
+        # возможность изменить пароль #
+        ###############################
+        user.save()
+        return Response({
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "message": "Данные сохранены"
+        })
+
+
+class RequestViewForVacancy(generics.GenericAPIView):
+    serializer_class = RequestSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        from_email = settings.EMAIL_HOST_USER
+        status = request.data['status']
+        title = request.data['title']
+        user = request.user
+        full_name = user.full_name
+        if status == '1':
+            to_email_user = user.email
+            to_email_header = request.data['email']
+            message_to_header = f'Здравствуйте! На Вашу вакансию с названием "{title}" подал заявку сотрудник' \
+                                f' {full_name}({to_email_user}), свяжитесь с ним по почте.'
+            message_to_user = f'Здравствуйте, {full_name}! Вы подали заявку на вакансию с названием "{title}",' \
+                              f' глава департамента этой вакансии свяжется с вами по почте.'
+            title = f'Заявка на вакансию!'
+        else:
+            to_email_user = request.data['email']
+            to_email_header = user.email
+            message_to_header = f'Здравствуйте, {full_name}! Вы заинтересовались резюме сотрудника - {title}({to_email_user}), ' \
+                                f'свяжитесь с ним по почте.'
+            message_to_user = f'Здравствуйте, {title}! {full_name}({to_email_header}) - глава департамента "{user.department}" ' \
+                              f'заинтересовался Вашем резюме, свяжитесь с ним по почте.'
+            title = f'Заявка на резюме!'
+        message = 'Заявка отправлена!'
+        try:
+            send_mass_mail(
+                ((title, message_to_user, from_email, [to_email_user]), (title, message_to_header, from_email,
+                                                                     [to_email_header])), fail_silently=True)
+        except:
+            message = 'Заявка НЕ отправлена!'
+        return Response({
+            'message': message
+        })

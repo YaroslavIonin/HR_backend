@@ -1,11 +1,17 @@
 from rest_framework import serializers
-from .models import Department, User
+from .models import Department, User, Bid
 from django.contrib.auth import get_user_model
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
+        fields = '__all__'
+
+
+class RequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bid
         fields = '__all__'
 
 
@@ -39,3 +45,28 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.set_password(validated_data.pop('password', ''))
         return super().update(instance, validated_data)
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+
+    password2 = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = [
+            "email",
+            "password",
+            "password2",
+        ]
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+        email = validated_data["email"]
+        password = validated_data["password"]
+        password2 = validated_data["password2"]
+        if password != password2:
+            raise serializers.ValidationError({"password": "Пароли не совпадают"})
+        user = User(email=email)
+        user.set_password(password)
+        user.save()
+        return user

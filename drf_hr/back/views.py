@@ -6,6 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAuthorOrReadOnly, IsHeaderOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from rest_framework import pagination
+
+#
+# class PageNumberSetPagination(pagination.PageNumberPagination):
+#     page_size = 2
+#     page_size_query_param = 'page_size'
+#     ordering = 'created_at'
 
 
 class IsOwnerFilter(filters.BaseFilterBackend):
@@ -21,6 +28,7 @@ class VacancyViewSet(ModelViewSet):
     filterset_fields = ('exp_work', 'salary', 'department')
     ordering_fields = ['data_updated']
     search_fields = ['title', 'description']
+    # pagination_class = PageNumberSetPagination
 
     def create(self, request, *args, **kwargs):
         if not request.user.is_header_dep:
@@ -58,7 +66,6 @@ class ResumeViewSet(ModelViewSet):
         file = self.request.data['file']
         exp_work = self.request.data['exp_work']
         salary = self.request.data['salary']
-        print(type(status), type(file), type(exp_work), type(salary))
         err = []
         if status == 'Y_P':
             if exp_work is None:
@@ -67,7 +74,6 @@ class ResumeViewSet(ModelViewSet):
                err.append('Желаемая заработная плата')
             if file == '':
                err.append('Файл с резюме')
-        print(err)
         if len(err) > 0:
             e = 'Заполните поля: {}.'.format(', '.join(err))
             return Response({'err': e})

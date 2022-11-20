@@ -1,5 +1,5 @@
 import datetime
-
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from django.conf import settings
 from accounts.models import Department, User

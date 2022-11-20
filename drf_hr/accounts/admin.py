@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Department
+from .models import User, Department, Bid
 from back.models import Resume
 
 
@@ -42,4 +42,12 @@ class DepartmentAdmin(admin.ModelAdmin):
     inlines = [DepartmentInstanceInline]
 
 
+@admin.register(Bid)
+class BidAdmin(admin.ModelAdmin):
+    list_display = ['addressee', 'destination', 'status']
+    list_filter = ('status',)
+    list_max_show_all = 20
+    list_per_page = 10
+    search_fields = ['addressee', 'destination']
+    # search_help_text = 'Поиск осуществляется по названию департамента'
 

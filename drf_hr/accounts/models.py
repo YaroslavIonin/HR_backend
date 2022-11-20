@@ -100,3 +100,17 @@ class Department(models.Model):
         verbose_name = 'Департамент'
         verbose_name_plural = 'Департаменты'
         ordering = ['name']
+
+
+class Bid(models.Model):
+    addressee = models.EmailField(max_length=255, verbose_name='От кого')
+    destination = models.EmailField(max_length=255, verbose_name='Кому')
+    status = models.CharField(max_length=50, choices=[
+        ('1', 'Вакансия'),
+        ('2', 'Резюме')
+    ], default=None, verbose_name='Заявка на что')
+
+    class Meta:
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
+
