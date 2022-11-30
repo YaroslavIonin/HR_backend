@@ -103,14 +103,16 @@ class Department(models.Model):
 
 
 class Bid(models.Model):
-    addressee = models.EmailField(max_length=255, verbose_name='От кого')
-    destination = models.EmailField(max_length=255, verbose_name='Кому')
+    addressee = models.ForeignKey(User, related_name='bids', verbose_name='От кого', on_delete=models.CASCADE)
+    destination = models.ForeignKey(User, verbose_name='Кому(поле id)', on_delete=models.CASCADE)
     status = models.CharField(max_length=50, choices=[
         ('1', 'Вакансия'),
         ('2', 'Резюме')
     ], default=None, verbose_name='Заявка на что')
+    data_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата редактирования')
 
     class Meta:
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
+        ordering = ['-data_created']
 
