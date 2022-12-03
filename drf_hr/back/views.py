@@ -21,7 +21,7 @@ class IsOwnerFilter(filters.BaseFilterBackend):
 
 
 class VacancyViewSet(ModelViewSet):
-    queryset = Vacancy.objects.all()
+    # queryset = Vacancy.objects.all()
     serializer_class = VacancySerializer
     permission_classes = (IsAuthorOrReadOnly, IsHeaderOrReadOnly)
     filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
@@ -29,6 +29,11 @@ class VacancyViewSet(ModelViewSet):
     ordering_fields = ['data_updated']
     search_fields = ['title', 'description']
     # pagination_class = PageNumberSetPagination
+
+    def get_queryset(self):
+        if self.request.data:
+            return Vacancy.objects.filter(user=str(self.request.user.id))
+        return Vacancy.objects.filter(status='Y_P')
 
     def create(self, request, *args, **kwargs):
         if not request.user.is_header_dep:
