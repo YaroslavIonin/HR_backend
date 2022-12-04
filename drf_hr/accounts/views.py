@@ -75,13 +75,16 @@ class RequestView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Bid.objects.filter(addressee=self.request.user, status='1')
+        if self.request.data['status'] == '1':
+            return Bid.objects.filter(addressee=self.request.user, status='1')
+        elif self.request.data['status'] == '2':
+            return Bid.objects.filter(addressee=self.request.user, status='2')
 
     def create(self, request, *args, **kwargs):
         from_email = settings.EMAIL_HOST_USER
         status = request.data['status']
         destination = User.objects.get(id=int(request.data['destination']))
-        if request.data['title']:
+        if 'title' in request.data:
             title = request.data['title']
         else:
             title = destination.full_name

@@ -18,7 +18,11 @@ class VacancySerializer(serializers.ModelSerializer):
     department = serializers.SerializerMethodField(read_only=True)
 
     def get_user(self, obj):
-        return str(obj.user.id)
+        return {
+            'id': obj.user.id,
+            'full_name': obj.user.full_name,
+            'email': obj.user.email,
+        }
 
     def get_department(self, obj):
         return str(obj.department)
