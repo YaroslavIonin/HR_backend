@@ -6,7 +6,11 @@ class ResumeSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
 
     def get_user(self, obj):
-        return str(obj.user.id)
+        return {
+            'id': obj.user.id,
+            'full_name': obj.user.full_name,
+            'email': obj.user.email,
+        }
 
     class Meta:
         model = Resume
