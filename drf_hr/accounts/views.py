@@ -75,9 +75,9 @@ class RequestView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        if self.request.data['status'] == '1':
+        if self.request.query_params['status'] == '1':
             return Bid.objects.filter(addressee=self.request.user, status='1')
-        elif self.request.data['status'] == '2':
+        elif self.request.query_params['status'] == '2':
             return Bid.objects.filter(addressee=self.request.user, status='2')
 
     def create(self, request, *args, **kwargs):
@@ -90,6 +90,7 @@ class RequestView(ModelViewSet):
             title = destination.full_name
         user = request.user
         full_name = user.full_name
+        title_m = ''
         if status == '1':
             to_email_user = user.email
             to_email_header = destination.email
@@ -97,7 +98,7 @@ class RequestView(ModelViewSet):
                                 f' {full_name}({to_email_user}), свяжитесь с ним по почте.'
             message_to_user = f'Здравствуйте, {full_name}! Вы подали заявку на вакансию с названием "{title}",' \
                               f' глава департамента этой вакансии свяжется с вами по почте.'
-            title = f'Заявка на вакансию!'
+            title_m = f'Заявка на вакансию!'
         else:
             to_email_user = destination.email
             to_email_header = user.email
@@ -105,13 +106,13 @@ class RequestView(ModelViewSet):
                                 f'свяжитесь с ним по почте.'
             message_to_user = f'Здравствуйте, {title}! {full_name}({to_email_header}) - глава департамента "{user.department}" ' \
                               f'заинтересовался Вашем резюме, свяжитесь с ним по почте.'
-            title = f'Заявка на резюме!'
+            title_m = f'Заявка на резюме!'
         message = 'Заявка отправлена!'
         try:
             send_mass_mail(
-                ((title, message_to_user, from_email, [to_email_user]), (title, message_to_header, from_email,
+                ((title_m, message_to_user, from_email, [to_email_user]), (title_m, message_to_header, from_email,
                                                                          [to_email_header])), fail_silently=True)
-            bid = Bid(addressee=request.user, destination=destination, status=status)
+            bid = Bid(addressee=request.user, destination=destination, status=status, title=title)
             bid.save()
         except:
             message = 'Заявка НЕ отправлена!'

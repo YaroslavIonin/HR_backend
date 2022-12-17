@@ -31,7 +31,7 @@ class VacancyViewSet(ModelViewSet):
     # pagination_class = PageNumberSetPagination
 
     def get_queryset(self):
-        if self.request.data:
+        if 'status' in self.request.query_params:
             return Vacancy.objects.filter(user=str(self.request.user.id))
         return Vacancy.objects.filter(status='Y_P')
 
@@ -51,11 +51,13 @@ class ResumeViewSet(ModelViewSet):
     filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
     filterset_fields = ('exp_work', 'salary')
     ordering_fields = ['data_updated']
-    search_fields = ['full_name']
+    search_fields = ['about_me']
 
     def get_queryset(self):
         if self.request.user.is_header_dep:
-            return Resume.objects.all()
+            if 'status' in self.request.query_params:
+                return Resume.objects.filter(user=str(self.request.user.id))
+            return Resume.objects.filter(status='Y_P')
         return Resume.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
@@ -68,17 +70,21 @@ class ResumeViewSet(ModelViewSet):
         if obj.user.id != self.request.user.id:
             return Response({'err': 'Нельзя изменять чужое резюме'})
         status = self.request.data['status']
-        file = self.request.data['file']
-        exp_work = self.request.data['exp_work']
-        salary = self.request.data['salary']
         err = []
         if status == 'Y_P':
+            if 'file' in self.request.data:
+                file = self.request.data['file']
+            else:
+                file = ''
+            exp_work = self.request.data['exp_work']
+            salary = self.request.data['salary']
             if exp_work is None:
                err.append('Стаж работы')
             if salary == '0':
                err.append('Желаемая заработная плата')
-            if file == '':
-               err.append('Файл с резюме')
+            if file:
+                if file == '':
+                    err.append('Файл с резюме')
         if len(err) > 0:
             e = 'Заполните поля: {}.'.format(', '.join(err))
             return Response({'err': e})

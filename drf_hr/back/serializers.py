@@ -4,6 +4,7 @@ from .models import Resume, Vacancy
 
 class ResumeSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
+    data_updated = serializers.SerializerMethodField(read_only=True)
 
     def get_user(self, obj):
         return {
@@ -11,6 +12,9 @@ class ResumeSerializer(serializers.ModelSerializer):
             'full_name': obj.user.full_name,
             'email': obj.user.email,
         }
+
+    def get_data_updated(self, obj):
+        return str(obj.data_updated).split('T')[0].split(' ')[0]
 
     class Meta:
         model = Resume
@@ -20,6 +24,8 @@ class ResumeSerializer(serializers.ModelSerializer):
 class VacancySerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
     department = serializers.SerializerMethodField(read_only=True)
+    data_updated = serializers.SerializerMethodField(read_only=True)
+
 
     def get_user(self, obj):
         return {
@@ -27,6 +33,9 @@ class VacancySerializer(serializers.ModelSerializer):
             'full_name': obj.user.full_name,
             'email': obj.user.email,
         }
+
+    def get_data_updated(self, obj):
+        return str(obj.data_updated).split('T')[0].split(' ')[0]
 
     def get_department(self, obj):
         return str(obj.department)

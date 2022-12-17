@@ -21,7 +21,7 @@ DEBUG = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'hr.portal.very.interesting@gmail.com'
-EMAIL_HOST_PASSWORD = 'xdxmktzddowgalql'
+EMAIL_HOST_PASSWORD = 'sbjcdsacacewyuwe'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -158,6 +158,7 @@ CKEDITOR_CONFIGS = {
     ],
     }
 }
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

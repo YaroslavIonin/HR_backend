@@ -10,6 +10,14 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
 
 class RequestSerializer(serializers.ModelSerializer):
+    destination = serializers.SerializerMethodField()
+
+    def get_destination(self, obj):
+        return {
+            'full_name': obj.destination.full_name,
+            'email': obj.destination.email
+        }
+
     class Meta:
         model = Bid
         fields = '__all__'

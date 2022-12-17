@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password, identify_hasher
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-# from back.models import Resume
+# from back.models import Resume, Vacancy
 
 
 class UserManager(BaseUserManager):
@@ -105,6 +105,7 @@ class Department(models.Model):
 class Bid(models.Model):
     addressee = models.ForeignKey(User, related_name='bids', verbose_name='От кого', on_delete=models.CASCADE)
     destination = models.ForeignKey(User, verbose_name='Кому(поле id)', on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, verbose_name='Заявка на вакансию:', blank=True)
     status = models.CharField(max_length=50, choices=[
         ('1', 'Вакансия'),
         ('2', 'Резюме')
