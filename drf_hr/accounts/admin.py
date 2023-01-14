@@ -18,7 +18,7 @@ class ResumeInstanceInline(admin.StackedInline):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'email', 'is_admin', 'is_header_dep']
-    fields = (('full_name', 'email'), 'password', 'image', ('is_admin', 'is_header_dep'), 'department')
+    fields = (('full_name', 'email'), 'password', 'image', ('is_admin', 'is_header_dep', 'is_active'), 'department')
     empty_value_display = '-empty-'
     list_filter = ('full_name', 'email', 'is_admin', 'is_header_dep')
     list_max_show_all = 20

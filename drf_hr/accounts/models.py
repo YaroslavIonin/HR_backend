@@ -8,7 +8,7 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def create_user(self, email, password=None, full_name=None,
-                     is_active=True, is_staff=None, is_admin=None, is_header_dep=None, department=None, image=None):
+                     is_active=False, is_staff=None, is_admin=None, is_header_dep=None, department=None, image=None):
         if not email:
             raise ValueError('Пользователь должен иметь email')
 
@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, full_name=None):
-        user = self.create_user(email=email, password=password, full_name=full_name,
+        user = self.create_user(email=email, password=password, full_name=full_name, is_active=True,
                                 is_staff=True, is_admin=True, is_header_dep=True)
         return user
 
@@ -41,7 +41,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(unique=True, max_length=255, verbose_name='Email')
     full_name = models.CharField(max_length=255, blank=True, null=True, verbose_name='ФИО сотрудника')
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False, verbose_name='Админ')
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания аккаунта')
     is_header_dep = models.BooleanField(default=False, verbose_name='Глава департамента')
