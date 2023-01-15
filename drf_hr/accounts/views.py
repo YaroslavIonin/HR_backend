@@ -84,6 +84,16 @@ class RequestView(ModelViewSet):
         from_email = settings.EMAIL_HOST_USER
         status = request.data['status']
         destination = User.objects.get(id=int(request.data['destination']))
+        bids = Bid.objects.filter(addressee=self.request.user, status=status, destination=destination)
+        if len(bids) > 0:
+            if status == '1':
+                return Response({
+                    'err': 'Вы уже отправили заявку на эту вакансию.'
+                }, status=400)
+            else:
+                return Response({
+                    'err': 'Вы уже отправили заявку на это резюме.'
+                }, status=400)
         if 'title' in request.data:
             title = request.data['title']
         else:

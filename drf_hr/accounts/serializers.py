@@ -11,12 +11,16 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
 class RequestSerializer(serializers.ModelSerializer):
     destination = serializers.SerializerMethodField()
+    data_created = serializers.SerializerMethodField(read_only=True)
 
     def get_destination(self, obj):
         return {
             'full_name': obj.destination.full_name,
             'email': obj.destination.email
         }
+
+    def get_data_created(self, obj):
+        return str(obj.data_created).split('T')[0].split(' ')[0]
 
     class Meta:
         model = Bid

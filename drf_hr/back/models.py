@@ -18,7 +18,7 @@ class Resume(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name='Автор резюме', on_delete=models.CASCADE)
     exp_work = models.PositiveSmallIntegerField(verbose_name='Стаж работы', default=0)
     salary = models.PositiveIntegerField(verbose_name='Желаемая заработная плата', default=0)
-    about_me = models.TextField(max_length=500, verbose_name='О сотруднике', blank=True, null=True)
+    about_me = models.TextField(max_length=1500, verbose_name='О сотруднике', blank=True, null=True)
     status = models.CharField(max_length=3, choices=statuses, default=TO_WORK, verbose_name='Статус резюме:')
     image = models.ImageField(upload_to='images/%Y/%m/%d/', verbose_name='Фото', blank=True, null=True)
     data_updated = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования')
@@ -36,7 +36,7 @@ class Resume(models.Model):
 class Vacancy(models.Model):
     title = models.CharField(max_length=150, verbose_name='Название вакансии')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Автор вакансии', on_delete=models.CASCADE, null=True)
-    description = models.TextField(max_length=500, verbose_name='Описание вакансии', blank=True, null=True)
+    description = models.TextField(max_length=1500, verbose_name='Описание вакансии', blank=True, null=True)
     exp_work = models.PositiveSmallIntegerField(verbose_name='Требуемый стаж работы', default=0)
     salary = models.PositiveIntegerField(verbose_name='Заработная плата', default=0)
     department = models.ForeignKey(Department, blank=True, null=True, verbose_name='Департамент', on_delete=models.RESTRICT)
