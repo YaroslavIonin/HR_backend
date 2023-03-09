@@ -66,28 +66,21 @@ class ResumeViewSet(ModelViewSet):
         return super().create(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
+        data = request.data
         obj = self.get_object()
         if obj.user.id != self.request.user.id:
             return Response({'err': 'Нельзя изменять чужое резюме'})
         status = self.request.data['status']
-        err = []
-        if status == 'Y_P':
-            if 'file' in self.request.data:
-                file = self.request.data['file']
-            else:
-                file = ''
-            exp_work = self.request.data['exp_work']
-            salary = self.request.data['salary']
-            if exp_work is None:
-               err.append('Стаж работы')
-            if salary == '0':
-               err.append('Желаемая заработная плата')
-            if file:
-                if file == '':
-                    err.append('Файл с резюме')
-        if len(err) > 0:
-            e = 'Заполните поля: {}.'.format(', '.join(err))
-            return Response({'err': e})
+        if 'salary' not in data:
+            saved_resume = Resume.objects.get(id=data['id'])
+            serializer = ResumeSerializer(instance=saved_resume, data={
+                'status': status
+            }, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                saved_user = serializer.save()
+                return Response({
+                    'message': 'Данные успешно изменены!'
+                })
         else:
             return super().update(request, *args, **kwargs)
 

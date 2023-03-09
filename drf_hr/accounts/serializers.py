@@ -27,7 +27,7 @@ class RequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserAppSerializer(serializers.ModelSerializer):
     department = serializers.SerializerMethodField(read_only=True)
     is_admin = serializers.SerializerMethodField(read_only=True)
     is_header_dep = serializers.SerializerMethodField(read_only=True)

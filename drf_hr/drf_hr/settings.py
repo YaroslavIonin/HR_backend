@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'back',
     'accounts',
     'rest_framework',
+    'drf_yasg',
     'django_filters',
     'corsheaders',
     'ckeditor',

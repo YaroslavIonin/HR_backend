@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
 
 from .models import User, Department, Bid
-from .serializers import UserSerializer, DepartmentSerializer, RegisterSerializer, RequestSerializer
+from .serializers import UserAppSerializer, DepartmentSerializer, RegisterSerializer, RequestSerializer
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 
@@ -28,7 +28,7 @@ class RegisterView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "user": UserAppSerializer(user, context=self.get_serializer_context()).data,
             "message": "Пользователь успешно создан",
         })
 
@@ -50,11 +50,11 @@ class LoginView(APIView):
 
 class ProfileView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = UserSerializer
+    serializer_class = UserAppSerializer
 
     def get(self, request, *args, **kwargs):
         return Response({
-            "user": UserSerializer(request.user, context=self.get_serializer_context()).data,
+            "user": UserAppSerializer(request.user, context=self.get_serializer_context()).data,
         })
 
     def put(self, request, *args, **kwargs):
@@ -65,7 +65,7 @@ class ProfileView(generics.GenericAPIView):
         ###############################
         user.save()
         return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "user": UserAppSerializer(user, context=self.get_serializer_context()).data,
             "message": "Данные сохранены"
         })
 
@@ -89,11 +89,11 @@ class RequestView(ModelViewSet):
             if status == '1':
                 return Response({
                     'err': 'Вы уже отправили заявку на эту вакансию.'
-                }, status=400)
+                })
             else:
                 return Response({
                     'err': 'Вы уже отправили заявку на это резюме.'
-                }, status=400)
+                })
         if 'title' in request.data:
             title = request.data['title']
         else:
