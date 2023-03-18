@@ -1,2 +1,12 @@
-.env
-.idea
+env/
+.idea/
+
+drf_hr/media
+drf_hr/db.sqlite3
+
+drf_hr/accounts/migrations
+drf_hr/back/migrations
+
+drf_hr/accounts/__pycache__
+drf_hr/back/__pycache__
+drf_hr/drf_hr/__pycache__
