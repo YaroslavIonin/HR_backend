@@ -7,6 +7,10 @@ from .permissions import IsAuthorOrReadOnly, IsHeaderOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework import pagination
+from rest_framework.views import APIView
+from accounts.models import User
+from rest_framework import generics
+
 
 #
 # class PageNumberSetPagination(pagination.PageNumberPagination):
@@ -28,6 +32,7 @@ class VacancyViewSet(ModelViewSet):
     filterset_fields = ('exp_work', 'salary', 'department')
     ordering_fields = ['data_updated']
     search_fields = ['title', 'description']
+
     # pagination_class = PageNumberSetPagination
 
     def get_queryset(self):
@@ -42,6 +47,34 @@ class VacancyViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, department=self.request.user.department)
+
+
+class AddToFavoriteVacancies(generics.GenericAPIView):
+    queryset = Vacancy.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = User.objects.get(id=self.request.user.id)
+        favorite_vacancies = [
+            VacancySerializer(
+                Vacancy.objects.get(id=vacancy.id),
+                context=self.get_serializer_context()).data
+            for vacancy in user.favorite_vacancies.all()]
+        print(favorite_vacancies)
+        return Response({
+            'vacancies': favorite_vacancies
+        })
+
+    def put(self, request):
+        user = User.objects.get(id=self.request.user.id)
+        vacancy = Vacancy.objects.get(id=self.request.query_params['id'])
+        if vacancy in user.favorite_vacancies.all():
+            user.favorite_vacancies.remove(vacancy)
+        else:
+            user.favorite_vacancies.add(vacancy)
+        return Response({
+            'status': 'ok'
+        })
 
 
 class ResumeViewSet(ModelViewSet):

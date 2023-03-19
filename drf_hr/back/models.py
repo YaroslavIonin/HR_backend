@@ -42,6 +42,7 @@ class Vacancy(models.Model):
     department = models.ForeignKey(Department, blank=True, null=True, verbose_name='Департамент', on_delete=models.RESTRICT)
     status = models.CharField(max_length=3, choices=statuses, default=TO_WORK, verbose_name='Статус вакансии:')
     data_updated = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования/публикации')
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='favorite_vacancies')
 
     def __str__(self):
         return self.title
