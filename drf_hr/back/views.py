@@ -1,4 +1,6 @@
 from rest_framework.response import Response
+
+from .filters import VacancyFilter, ResumeFilter
 from .models import Resume, Vacancy
 from .serializers import ResumeSerializer, VacancySerializer
 from rest_framework.viewsets import ModelViewSet
@@ -12,24 +14,11 @@ from accounts.models import User
 from rest_framework import generics
 
 
-#
-# class PageNumberSetPagination(pagination.PageNumberPagination):
-#     page_size = 2
-#     page_size_query_param = 'page_size'
-#     ordering = 'created_at'
-
-
-class IsOwnerFilter(filters.BaseFilterBackend):
-    def filter_queryset(self, request, queryset, view):
-        return queryset.filter(exp_work=request.user)
-
-
 class VacancyViewSet(ModelViewSet):
-    # queryset = Vacancy.objects.all()
     serializer_class = VacancySerializer
     permission_classes = (IsAuthorOrReadOnly, IsHeaderOrReadOnly)
     filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
-    filterset_fields = ('exp_work', 'salary', 'department')
+    filterset_class = VacancyFilter
     ordering_fields = ['data_updated']
     search_fields = ['title', 'description']
 
@@ -82,7 +71,7 @@ class ResumeViewSet(ModelViewSet):
     serializer_class = ResumeSerializer
     permission_classes = (IsAuthorOrReadOnly,)
     filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
-    filterset_fields = ('exp_work', 'salary')
+    filterset_class = ResumeFilter
     ordering_fields = ['data_updated']
     search_fields = ['about_me']
 
