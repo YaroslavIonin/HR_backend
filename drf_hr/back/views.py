@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 
 from .filters import VacancyFilter, ResumeFilter
-from .models import Resume, Vacancy
-from .serializers import ResumeSerializer, VacancySerializer
+from .models import Resume, Vacancy, Skills
+from .serializers import ResumeSerializer, VacancySerializer, SkillsSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAuthorOrReadOnly, IsHeaderOrReadOnly
@@ -38,7 +38,7 @@ class VacancyViewSet(ModelViewSet):
         serializer.save(user=self.request.user, department=self.request.user.department)
 
 
-class AddToFavoriteVacancies(generics.GenericAPIView):
+class FavoriteVacancies(generics.GenericAPIView):
     queryset = Vacancy.objects.all()
     permission_classes = (IsAuthenticated,)
 
@@ -49,7 +49,6 @@ class AddToFavoriteVacancies(generics.GenericAPIView):
                 Vacancy.objects.get(id=vacancy.id),
                 context=self.get_serializer_context()).data
             for vacancy in user.favorite_vacancies.all()]
-        print(favorite_vacancies)
         return Response({
             'vacancies': favorite_vacancies
         })
@@ -108,3 +107,16 @@ class ResumeViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class ListSkills(APIView):
+    queryset = Skills.objects.all()
+    serializer_class = SkillsSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        skills = [SkillsSerializer(skill).data for skill in Skills.objects.all()]
+        return Response({
+            'skills': skills
+        })
+

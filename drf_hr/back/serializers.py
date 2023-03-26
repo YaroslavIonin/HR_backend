@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Resume, Vacancy
+from .models import Resume, Vacancy, Skills
 
 
 class ResumeSerializer(serializers.ModelSerializer):
@@ -26,7 +26,6 @@ class VacancySerializer(serializers.ModelSerializer):
     department = serializers.SerializerMethodField(read_only=True)
     data_updated = serializers.SerializerMethodField(read_only=True)
 
-
     def get_user(self, obj):
         return {
             'id': obj.user.id,
@@ -42,4 +41,10 @@ class VacancySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vacancy
+        fields = '__all__'
+
+
+class SkillsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skills
         fields = '__all__'

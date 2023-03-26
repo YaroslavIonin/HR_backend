@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Resume, Vacancy
+from .models import Resume, Vacancy, Skills
 
 
 @admin.register(Resume)
@@ -19,7 +19,7 @@ class ResumeAdmin(admin.ModelAdmin):
 @admin.register(Vacancy)
 class VacancyAdmin(admin.ModelAdmin):
     list_display = ['title', 'user', 'department', 'exp_work', 'salary', 'status']
-    fields = (('title', 'status'), ('user', 'department'), ('exp_work', 'salary'), 'description')
+    fields = (('title', 'status'), ('user', 'department'), ('exp_work', 'salary'), 'description', 'skills')
     empty_value_display = '-empty-'
     readonly_fields = ('department',)
     list_filter = ('title', 'user', 'department', 'exp_work', 'salary', 'status')
@@ -27,3 +27,8 @@ class VacancyAdmin(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ['user', 'title', 'department', 'status']
     search_help_text = 'Поиск осуществляется по ФИО пользователей, департаменту и названию или статусу вакансии'
+
+
+@admin.register(Skills)
+class SkillsAdmin(admin.ModelAdmin):
+    list_display = ['name']

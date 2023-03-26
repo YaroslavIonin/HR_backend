@@ -14,6 +14,18 @@ statuses = [
 ]
 
 
+class Skills(models.Model):
+    name = models.CharField(max_length=150, verbose_name='Название скила')
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        verbose_name = 'Компитенция'
+        verbose_name_plural = 'Компитенции'
+        ordering = ['name']
+
+
 class Resume(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name='Автор резюме', on_delete=models.CASCADE)
     exp_work = models.PositiveSmallIntegerField(verbose_name='Стаж работы', default=0)
@@ -25,7 +37,7 @@ class Resume(models.Model):
     file = models.FileField(upload_to='files/%Y/%m/%d/', verbose_name='Файл с резюме', blank=True, null=True)
 
     def __str__(self):
-        return 'Резюме: {}'.format(self.user)
+        return f'Резюме: {self.user}'
 
     class Meta:
         verbose_name = 'Резюме'
@@ -42,7 +54,8 @@ class Vacancy(models.Model):
     department = models.ForeignKey(Department, blank=True, null=True, verbose_name='Департамент', on_delete=models.RESTRICT)
     status = models.CharField(max_length=3, choices=statuses, default=TO_WORK, verbose_name='Статус вакансии:')
     data_updated = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования/публикации')
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='favorite_vacancies')
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='favorite_vacancies', default=[])
+    skills = models.ManyToManyField(Skills, related_name='skills', default=[])
 
     def __str__(self):
         return self.title
