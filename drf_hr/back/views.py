@@ -27,7 +27,7 @@ class VacancyViewSet(ModelViewSet):
     def get_queryset(self):
         if 'status' in self.request.query_params:
             return Vacancy.objects.filter(user=str(self.request.user.id))
-        return Vacancy.objects.filter(status='Y_P')
+        return Vacancy.objects.filter(status=1)
 
     def create(self, request, *args, **kwargs):
         if not request.user.is_header_dep:
@@ -78,7 +78,7 @@ class ResumeViewSet(ModelViewSet):
         if self.request.user.is_header_dep:
             if 'status' in self.request.query_params:
                 return Resume.objects.filter(user=str(self.request.user.id))
-            return Resume.objects.filter(status='Y_P')
+            return Resume.objects.filter(status=1)
         return Resume.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):

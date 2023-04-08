@@ -4,25 +4,21 @@ from django.db import models
 from django.conf import settings
 from accounts.models import Department, User
 
-TO_WORK = 'T_W'
-NOT_PUBLISHED = 'N_P'
-YES_PUBLISHED = 'Y_P'
-statuses = [
-    (TO_WORK, 'В работе'),
-    (NOT_PUBLISHED, 'Не опубликовано'),
-    (YES_PUBLISHED, 'Опубликовано')
-]
-
 
 class Skills(models.Model):
-    name = models.CharField(max_length=150, verbose_name='Название скила')
+    name = models.CharField(max_length=150, verbose_name='Название навыка')
+    statuses_skills = [
+        (1, 'hard skill'),
+        (0, 'soft skill')
+    ]
+    status = models.IntegerField(choices=statuses_skills, verbose_name='Вид навыка')
 
     def __str__(self):
         return f'{self.name}'
 
     class Meta:
-        verbose_name = 'Компитенция'
-        verbose_name_plural = 'Компитенции'
+        verbose_name = 'Навык'
+        verbose_name_plural = 'Навыки'
         ordering = ['name']
 
 
@@ -31,7 +27,10 @@ class Resume(models.Model):
     exp_work = models.PositiveSmallIntegerField(verbose_name='Стаж работы', default=0)
     salary = models.PositiveIntegerField(verbose_name='Желаемая заработная плата', default=0)
     about_me = models.TextField(max_length=1500, verbose_name='О сотруднике', blank=True, null=True)
-    status = models.CharField(max_length=3, choices=statuses, default=TO_WORK, verbose_name='Статус резюме:')
+    status = models.IntegerField(choices=[
+        (0, 'Не опубликовано'),
+        (1, 'Опубликовано')
+    ], default=0, verbose_name='Статус резюме:')
     image = models.ImageField(upload_to='images/%Y/%m/%d/', verbose_name='Фото', blank=True, null=True)
     data_updated = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования')
     file = models.FileField(upload_to='files/%Y/%m/%d/', verbose_name='Файл с резюме', blank=True, null=True)
@@ -52,10 +51,13 @@ class Vacancy(models.Model):
     exp_work = models.PositiveSmallIntegerField(verbose_name='Требуемый стаж работы', default=0)
     salary = models.PositiveIntegerField(verbose_name='Заработная плата', default=0)
     department = models.ForeignKey(Department, blank=True, null=True, verbose_name='Департамент', on_delete=models.RESTRICT)
-    status = models.CharField(max_length=3, choices=statuses, default=TO_WORK, verbose_name='Статус вакансии:')
+    status = models.IntegerField(choices=[
+        (0, 'Не опубликовано'),
+        (1, 'Опубликовано')
+    ], default=0, verbose_name='Статус вакансии:')
     data_updated = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования/публикации')
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='favorite_vacancies', default=[])
-    skills = models.ManyToManyField(Skills, related_name='skills', default=[])
+    skills = models.ManyToManyField(Skills, related_name='skills', default=[], blank=True)
 
     def __str__(self):
         return self.title

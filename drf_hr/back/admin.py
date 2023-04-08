@@ -31,4 +31,4 @@ class VacancyAdmin(admin.ModelAdmin):
 
 @admin.register(Skills)
 class SkillsAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ['name', 'status']
