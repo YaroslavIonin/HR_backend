@@ -56,7 +56,7 @@ class Vacancy(models.Model):
         (1, 'Опубликовано')
     ], default=0, verbose_name='Статус вакансии:')
     data_updated = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования/публикации')
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='favorite_vacancies', default=[])
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='favorite_vacancies', default=[], blank=[])
     skills = models.ManyToManyField(Skills, related_name='skills', default=[], blank=True)
 
     def __str__(self):
