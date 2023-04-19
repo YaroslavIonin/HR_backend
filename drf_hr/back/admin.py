@@ -6,7 +6,7 @@ from .models import Resume, Vacancy, Skills
 @admin.register(Resume)
 class ResumeAdmin(admin.ModelAdmin):
     list_display = ['user', 'exp_work', 'salary', 'status', 'data_updated']
-    fields = (('user', 'status'), ('exp_work', 'salary'), 'about_me', 'image', 'file')
+    fields = (('user', 'status'), ('exp_work', 'salary'), 'about_me', 'image', 'file', 'skills')
     empty_value_display = '-empty-'
     # readonly_fields = ('user', 'exp_work', 'salary', 'status', 'data_updated' )
     list_filter = ('user', 'exp_work', 'salary', 'status', 'data_updated')
