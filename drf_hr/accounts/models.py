@@ -1,6 +1,8 @@
 from django.contrib.auth.hashers import make_password, identify_hasher
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+
+
 # from back.models import Resume, Vacancy
 
 
@@ -8,7 +10,7 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def create_user(self, email, password=None, full_name=None,
-                     is_active=False, is_staff=None, is_admin=None, is_header_dep=None, department=None, image=None):
+                    is_active=False, is_staff=None, is_admin=None, is_header_dep=None, department=None, image=None):
         if not email:
             raise ValueError('Пользователь должен иметь email')
 
@@ -45,7 +47,8 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False, verbose_name='Админ')
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания аккаунта')
     is_header_dep = models.BooleanField(default=False, verbose_name='Глава департамента')
-    department = models.ForeignKey('Department', on_delete=models.RESTRICT, blank=True, null=True, verbose_name='Департамент')
+    department = models.ForeignKey('Department', on_delete=models.RESTRICT, blank=True, null=True,
+                                   verbose_name='Департамент')
     image = models.ImageField(upload_to='images/%Y/%m/%d/', blank=True, null=True, verbose_name='Аватар')
 
     USERNAME_FIELD = 'email'
@@ -76,7 +79,7 @@ class User(AbstractBaseUser):
             self.is_staff = False
             self.is_admin = False
         try:
-           _alg_ = identify_hasher(self.password)
+            _alg_ = identify_hasher(self.password)
         except ValueError:
             self.password = make_password(self.password)
         if self.is_admin:
@@ -116,4 +119,3 @@ class Bid(models.Model):
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
         ordering = ['-data_created']
-

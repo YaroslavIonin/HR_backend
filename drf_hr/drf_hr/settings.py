@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'djoser',
     'ckeditor_uploader',
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [

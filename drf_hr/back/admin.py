@@ -18,11 +18,18 @@ class ResumeAdmin(admin.ModelAdmin):
 
 @admin.register(Vacancy)
 class VacancyAdmin(admin.ModelAdmin):
-    list_display = ['title', 'user', 'department', 'exp_work', 'salary', 'status']
-    fields = (('title', 'status'), ('user', 'department'), ('exp_work', 'salary'), 'description', 'skills')
+    list_display = ['title', 'user', 'department', 'status']
+    fields = (
+        ('title', 'status'),
+        ('user', 'department'),
+        ('employment', 'schedule'),
+        ('exp_work', 'salary_from', 'salary_to'),
+        'description',
+        'skills')
     empty_value_display = '-empty-'
     readonly_fields = ('department',)
-    list_filter = ('title', 'user', 'department', 'exp_work', 'salary', 'status')
+    list_filter = (
+        'title', 'user', 'department', 'employment', 'exp_work', 'salary_from', 'salary_to', 'schedule', 'status')
     list_max_show_all = 20
     list_per_page = 10
     search_fields = ['user', 'title', 'department', 'status']

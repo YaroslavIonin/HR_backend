@@ -1,5 +1,5 @@
-from rest_framework import serializers
-from .models import Resume, Vacancy, Skills
+from rest_framework import serializers, fields
+from .models import Resume, Vacancy, Skills, schedule_choices
 
 
 class ResumeSerializer(serializers.ModelSerializer):
@@ -25,6 +25,7 @@ class VacancySerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
     department = serializers.SerializerMethodField(read_only=True)
     data_updated = serializers.SerializerMethodField(read_only=True)
+    schedule = fields.MultipleChoiceField(choices=schedule_choices)
 
     def get_user(self, obj):
         return {
