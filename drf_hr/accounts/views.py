@@ -83,8 +83,9 @@ class RequestView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         from_email = settings.EMAIL_HOST_USER
         status = request.data['status']
+        id_vr = request.data['id']
         destination = User.objects.get(id=int(request.data['destination']))
-        bids = Bid.objects.filter(addressee=self.request.user, status=status, destination=destination)
+        bids = Bid.objects.filter(addressee=self.request.user, status=status, destination=destination, id_vr=id_vr)
         if len(bids) > 0:
             if status == '1':
                 return Response({
@@ -122,7 +123,7 @@ class RequestView(ModelViewSet):
             send_mass_mail(
                 ((title_m, message_to_user, from_email, [to_email_user]), (title_m, message_to_header, from_email,
                                                                          [to_email_header])), fail_silently=True)
-            bid = Bid(addressee=request.user, destination=destination, status=status, title=title)
+            bid = Bid(addressee=request.user, destination=destination, status=status, title=title, id_vr=id_vr)
             bid.save()
         except:
             message = 'Заявка НЕ отправлена!'

@@ -1,4 +1,7 @@
 from rest_framework import serializers
+
+from back.models import Vacancy, Resume
+from back.serializers import VacancySerializer, ResumeSerializer
 from .models import Department, User, Bid
 from django.contrib.auth import get_user_model
 
@@ -12,6 +15,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class RequestSerializer(serializers.ModelSerializer):
     destination = serializers.SerializerMethodField()
     data_created = serializers.SerializerMethodField(read_only=True)
+    item = serializers.SerializerMethodField()
 
     def get_destination(self, obj):
         return {
@@ -19,12 +23,20 @@ class RequestSerializer(serializers.ModelSerializer):
             'email': obj.destination.email
         }
 
+    def get_item(self, obj):
+        if obj.status == '1':
+            item = Vacancy.objects.get(id=obj.id_vr)
+            return VacancySerializer(item).data
+        if obj.status == '2':
+            item = Resume.objects.get(id=obj.id_vr)
+            return ResumeSerializer(item).data
+
     def get_data_created(self, obj):
         return str(obj.data_created).split('T')[0].split(' ')[0]
 
     class Meta:
         model = Bid
-        fields = '__all__'
+        fields = ['id', 'destination', 'data_created', 'item']
 
 
 class UserAppSerializer(serializers.ModelSerializer):
@@ -60,7 +72,6 @@ class UserAppSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-
     password2 = serializers.CharField(write_only=True)
 
     class Meta:

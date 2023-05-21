@@ -55,11 +55,15 @@ class ResumeFilter(filters.FilterSet):
 
     salary__gt = NumberFilter(field_name='salary', lookup_expr='gte')
     salary__lt = NumberFilter(field_name='salary', lookup_expr='lte')
+    # salary = NumberFilter(method='custom_filter_salary', label='Заработная плата')
 
     skills = ModelMultipleChoiceFilter(
         field_name='skills',
         queryset=Skills.objects.all(),
     )
+
+    # def custom_filter_salary(self, queryset, name, value):
+    #     return queryset.filter(salary_to__gte=value, salary_from__lte=value)
 
     class Meta:
         model = Resume
