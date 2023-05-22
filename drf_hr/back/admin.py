@@ -25,7 +25,8 @@ class VacancyAdmin(admin.ModelAdmin):
         ('employment', 'schedule'),
         ('exp_work', 'salary_from', 'salary_to'),
         'description',
-        'skills')
+        'skills',
+        'users')
     empty_value_display = '-empty-'
     readonly_fields = ('department',)
     list_filter = (
