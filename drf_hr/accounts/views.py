@@ -59,10 +59,10 @@ class ProfileView(generics.GenericAPIView):
 
     def put(self, request, *args, **kwargs):
         user = request.user
-        user.full_name = request.data["full_name"]
-        ###############################
-        # возможность изменить пароль #
-        ###############################
+        if "full_name" in request.data:
+            user.full_name = request.data["full_name"]
+        if "phone_number" in request.data:
+            user.phone_number = request.data["phone_number"]
         user.save()
         return Response({
             "user": UserAppSerializer(user, context=self.get_serializer_context()).data,

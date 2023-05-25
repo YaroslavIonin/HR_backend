@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'ckeditor',
     'djoser',
+    "phonenumber_field",
     'ckeditor_uploader',
     'multiselectfield',
 ]

@@ -38,7 +38,7 @@ class VacancyFilter(filters.FilterSet):
         }
 
     def custom_filter_salary(self, queryset, name, value):
-        return queryset.filter(salary_to__gte=value, salary_from__lte=value)
+        return queryset.filter(salary_to__gte=value)
 
     def custom_filter_schedule(self, queryset: QuerySet, name, value):
         result = Vacancy.objects.none()

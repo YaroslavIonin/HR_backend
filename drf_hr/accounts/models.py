@@ -4,6 +4,7 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 
 
 # from back.models import Resume, Vacancy
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class UserManager(BaseUserManager):
@@ -47,6 +48,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False, verbose_name='Админ')
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания аккаунта')
     is_header_dep = models.BooleanField(default=False, verbose_name='Глава департамента')
+    phone_number = PhoneNumberField(verbose_name='Номер телефона', blank=True, null=True, region="RU")
     department = models.ForeignKey('Department', on_delete=models.RESTRICT, blank=True, null=True,
                                    verbose_name='Департамент')
     image = models.ImageField(upload_to='images/%Y/%m/%d/', blank=True, null=True, verbose_name='Аватар')

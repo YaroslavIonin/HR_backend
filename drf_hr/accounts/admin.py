@@ -18,7 +18,8 @@ class ResumeInstanceInline(admin.StackedInline):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'email', 'is_admin', 'is_header_dep']
-    fields = (('full_name', 'email'), 'password', 'image', ('is_admin', 'is_header_dep', 'is_active'), 'department')
+    fields = (('full_name', 'email', 'phone_number'), 'password', 'image', ('is_admin', 'is_header_dep', 'is_active'),
+              'department')
     empty_value_display = '-empty-'
     list_filter = ('full_name', 'email', 'is_admin', 'is_header_dep')
     list_max_show_all = 20
@@ -50,4 +51,3 @@ class BidAdmin(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ['addressee', 'destination']
     # search_help_text = 'Поиск осуществляется по названию департамента'
-

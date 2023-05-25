@@ -12,6 +12,7 @@ django-cors-headers==3.14.0
 django-filter==22.1
 django-js-asset==2.0.0
 django-multiselectfield==0.1.12
+django-phonenumber-field==7.1.0
 django-taggit==3.1.0
 django-templated-mail==1.1.1
 djangorestframework==3.14.0
@@ -25,6 +26,7 @@ Jinja2==3.1.2
 MarkupSafe==2.1.2
 oauthlib==3.2.2
 packaging==23.0
+phonenumbers==8.13.11
 Pillow==9.4.0
 pycparser==2.21
 PyJWT==2.6.0

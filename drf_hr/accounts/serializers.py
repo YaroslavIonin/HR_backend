@@ -1,3 +1,4 @@
+from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 
 from back.models import Vacancy, Resume
@@ -40,6 +41,7 @@ class RequestSerializer(serializers.ModelSerializer):
 
 
 class UserAppSerializer(serializers.ModelSerializer):
+    phone_number = PhoneNumberField(region="RU")
     department = serializers.SerializerMethodField(read_only=True)
     is_admin = serializers.SerializerMethodField(read_only=True)
     is_header_dep = serializers.SerializerMethodField(read_only=True)
@@ -56,7 +58,7 @@ class UserAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         queryset = User.objects.all()
-        fields = ['id', 'email', 'full_name', 'is_admin', 'is_header_dep', 'department', 'image', 'password']
+        fields = ['id', 'email', 'full_name', 'is_admin', 'is_header_dep', 'department', 'image', 'password', "phone_number"]
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
