@@ -42,7 +42,7 @@ class Resume(models.Model):
     image = models.ImageField(upload_to='images/%Y/%m/%d/', verbose_name='Фото', blank=True, null=True)
     data_updated = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования')
     file = models.FileField(upload_to='files/%Y/%m/%d/', verbose_name='Файл с резюме', blank=True, null=True)
-    skills = models.ManyToManyField(Skills, related_name='skills_res', default=[], blank=True)
+    skills = models.ManyToManyField(Skills, related_name='skills_res', default=[], blank=True, verbose_name='Навыки')
 
     def __str__(self):
         return f'Резюме: {self.user}'

@@ -33,7 +33,7 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
     list_display = ['name']
-    fields = ('name', 'description')
+    fields = ('name', 'description', 'count')
     empty_value_display = '-empty-'
     list_filter = ('name',)
     list_max_show_all = 20

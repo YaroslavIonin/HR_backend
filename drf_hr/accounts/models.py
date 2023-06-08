@@ -1,9 +1,6 @@
 from django.contrib.auth.hashers import make_password, identify_hasher
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-
-
-# from back.models import Resume, Vacancy
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -97,6 +94,7 @@ class User(AbstractBaseUser):
 class Department(models.Model):
     name = models.CharField(max_length=255, db_index=True, verbose_name='Название департамента')
     description = models.TextField(max_length=500, verbose_name='Описание департамента', blank=True, null=True)
+    count = models.IntegerField(verbose_name='Количество сотрудников', default=0)
 
     def __str__(self):
         return self.name
@@ -111,7 +109,7 @@ class Bid(models.Model):
     addressee = models.ForeignKey(User, related_name='bids', verbose_name='От кого', on_delete=models.CASCADE)
     destination = models.ForeignKey(User, verbose_name='Кому(поле id)', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='Заявка на вакансию:', blank=True)
-    id_vr = models.IntegerField(max_length=255, verbose_name='ID вакансии или резюме')
+    id_vr = models.IntegerField(verbose_name='ID вакансии или резюме')
     status = models.CharField(max_length=50, choices=[
         ('1', 'Вакансия'),
         ('2', 'Резюме')

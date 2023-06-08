@@ -18,7 +18,7 @@ class ResumeAdmin(admin.ModelAdmin):
 
 @admin.register(Vacancy)
 class VacancyAdmin(admin.ModelAdmin):
-    list_display = ['title', 'user', 'department', 'status']
+    list_display = ['title', 'user', 'salary_from', 'salary_to', 'department', 'status']
     fields = (
         ('title', 'status'),
         ('user', 'department'),
