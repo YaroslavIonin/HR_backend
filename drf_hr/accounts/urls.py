@@ -1,5 +1,3 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path, include
 from .views import DepartmentViewSet, RegisterView, ProfileView, RequestView
 from rest_framework.routers import DefaultRouter

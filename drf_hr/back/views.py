@@ -1,6 +1,5 @@
 from django.db.models import Q
 from rest_framework.response import Response
-
 from .filters import VacancyFilter, ResumeFilter
 from .models import Resume, Vacancy, Skills
 from .serializers import ResumeSerializer, VacancySerializer, SkillsSerializer

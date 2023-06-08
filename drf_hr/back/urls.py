@@ -1,6 +1,4 @@
-from django.conf import settings
-from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import path
 from .views import VacancyViewSet, ResumeViewSet, FavoriteVacancies, ListSkills, SimilarVacancies
 from rest_framework.routers import DefaultRouter
 

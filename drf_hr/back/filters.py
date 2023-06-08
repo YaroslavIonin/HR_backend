@@ -1,6 +1,5 @@
 from django.db.models import QuerySet
 from django_filters import rest_framework as filters, NumberFilter, ModelMultipleChoiceFilter, MultipleChoiceFilter
-
 from back.models import Vacancy, Resume, Skills, schedule_choices
 
 

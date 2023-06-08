@@ -1,13 +1,10 @@
-from django.shortcuts import render
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from django.core.mail import send_mail, send_mass_mail
+from django.core.mail import send_mass_mail
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
-
 from .models import User, Department, Bid
 from .serializers import UserAppSerializer, DepartmentSerializer, RegisterSerializer, RequestSerializer
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet

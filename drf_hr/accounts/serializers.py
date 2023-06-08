@@ -1,6 +1,5 @@
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
-
 from back.models import Vacancy, Resume
 from back.serializers import VacancySerializer, ResumeSerializer
 from .models import Department, User, Bid
@@ -41,7 +40,7 @@ class RequestSerializer(serializers.ModelSerializer):
 
 
 class UserAppSerializer(serializers.ModelSerializer):
-    phone_number = PhoneNumberField(region="RU")
+    phone_number = PhoneNumberField(region="RU", required=False)
     department = serializers.SerializerMethodField(read_only=True)
     is_admin = serializers.SerializerMethodField(read_only=True)
     is_header_dep = serializers.SerializerMethodField(read_only=True)
