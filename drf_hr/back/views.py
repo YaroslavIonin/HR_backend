@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework.response import Response
 
 from .filters import VacancyFilter, ResumeFilter
@@ -63,6 +64,49 @@ class FavoriteVacancies(generics.GenericAPIView):
         return Response({
             'status': 'ok'
         })
+
+
+class SimilarVacancies(generics.GenericAPIView):
+    queryset = Vacancy.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    def get_similar(self, id_v):
+        vacancy = Vacancy.objects.get(id=id_v)
+        dep = vacancy.department
+        exp_work = vacancy.exp_work
+        vacancies = Vacancy.objects.filter(~Q(id=id_v) & Q(status=1) & Q(department=dep))
+
+        a, b = 0, 1
+        if exp_work < 3:
+            if exp_work >= 1:
+                a, b = 1, 3
+        elif exp_work < 6:
+            a, b = 3, 6
+        else:
+            a, b = 6, 6
+
+        if a == 0 and b == 1:
+            return vacancies.filter(Q(exp_work__lte=b))[:3]
+        if a == 6 == b:
+            return vacancies.filter(Q(exp_work__gte=b))[:3]
+        else:
+            return vacancies.filter(Q(exp_work__range=(a, b)))[:3]
+
+    def get(self, request):
+        if 'id' in self.request.query_params:
+            id = self.request.query_params['id']
+            similar_vacancies = [
+                VacancySerializer(
+                    vacancy,
+                    context=self.get_serializer_context()).data
+                for vacancy in self.get_similar(id)]
+            return Response({
+                'vacancies': similar_vacancies
+            })
+        else:
+            return Response({
+                'error': 'Запрос должен содержать id вакансии в параметрах'
+            })
 
 
 class ResumeViewSet(ModelViewSet):
